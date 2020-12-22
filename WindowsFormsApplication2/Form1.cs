@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
+using static System.Math;
 
 namespace WindowsFormsApplication2
 {
@@ -15,7 +16,9 @@ namespace WindowsFormsApplication2
     {
         public double _angle, _speed, _speed0, _time, _height, _length,
             _t, _dt, _x, _y, _speed0x, _speed0y, _h0;
-            
+
+
+
         public horizon()
         {
             InitializeComponent();
@@ -25,16 +28,17 @@ namespace WindowsFormsApplication2
         public void Timer1_Tick(object sender, EventArgs e)
         {
             Drow();
-            _t += _dt;
-            _x = Math.Round(_speed0x * _t);
-            _y = Math.Round(_h0 + (_speed0y * _t) - (9.81 * _t * _t) / 2);
+            _t += 0.1;
+            _x = Round(_speed0x * _t);
+            _y = Round(_h0 + (_speed0y * _t) - (9.81 * _t * _t) / 2);
         }
         public void Drow()
         {
-            Graphics spot = pictureBox1.CreateGraphics();
-            Pen Pen1 = new Pen(Color.Black);
-            Pen1.Width = 2;
-            spot.DrawLine(Pen1, Convert.ToInt32(_x - 1), Convert.ToInt32(300 - _y - 1), Convert.ToInt32(_x + 1), Convert.ToInt32(300 - _y + 1));
+            timer1.Enabled = true;
+            Graphics bmp = pictureBox1.CreateGraphics();
+            Pen pen = new Pen(Color.Black);
+            pen.Width = 2;
+            bmp.DrawLine(pen, Convert.ToInt32(_x - 1), Convert.ToInt32(300 - _y - 1), Convert.ToInt32(_x + 1), Convert.ToInt32(300 - _y + 1));
         }
 
         private void GetData()
@@ -43,7 +47,7 @@ namespace WindowsFormsApplication2
             {
                 _speed0 = Convert.ToDouble(textBox2.Text);
                 _angle = Convert.ToDouble(textBox1.Text);
-                _h0 = Convert.ToDouble(textBox3.Text);
+                _h0 = Convert.ToDouble(textBox6.Text);
             }
             catch
             {
@@ -74,11 +78,24 @@ namespace WindowsFormsApplication2
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
             GetData();
             Calc();
             ShowResult();
             timer1.Enabled = true;
+            Clear();
+            Drow();
+        }
+
+
+        public void Clear()
+        {  timer1.Enabled = false;
+            _x = 0;
+            _y = 0;
+            _t = 0;
+            Graphics bmp = pictureBox1.CreateGraphics();
+            bmp.Clear(SystemColors.Control);
+          
+
         }
     }
 }
